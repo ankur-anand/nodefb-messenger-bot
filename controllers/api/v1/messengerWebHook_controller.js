@@ -21,7 +21,7 @@ module.exports = {
       // https://developers.facebook.com/docs/messenger-platform/webhook#setup
       let entryMessage = data.entry[0].messaging[0];
       let sender = entryMessage.sender.id;
-      if (entryMessage.message) {
+      if (entryMessage.message && !entryMessage.message.is_echo) {
         let text = entryMessage.message.text;
         sendTextMessage(sender, `roger that ${text}`);
       }
