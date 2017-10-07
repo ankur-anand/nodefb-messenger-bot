@@ -1,0 +1,4 @@
+module.exports = {
+  VERIFY_TOKEN: process.env.TANGLED_VERIFY_TOKEN,
+  PAGE_ACCESS_TOKEN: process.env.TANGLED_PAGE_ACCESS_TOKEN
+};
