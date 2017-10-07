@@ -1,4 +1,3 @@
-## Node_FB_Chatbot
+## nodefb-messenger-bot
 
-### This is a Facebook Messenger Chatbot Written in Node.js
-Deployed on Heroku
+### Demo Facebook Messenger Chatbot Written in Node.js
