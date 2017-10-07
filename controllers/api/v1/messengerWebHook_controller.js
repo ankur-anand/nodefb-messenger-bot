@@ -21,6 +21,8 @@ module.exports = {
       // https://developers.facebook.com/docs/messenger-platform/webhook#setup
       let entryMessage = data.entry[0].messaging[0];
       let sender = entryMessage.sender.id;
+      //is_echo becomes true when the message has been sent from the page itself
+      // handling the case when user suscribe for such event for their app
       if (entryMessage.message && !entryMessage.message.is_echo) {
         let text = entryMessage.message.text;
         sendTextMessage(sender, `roger that ${text}`);
