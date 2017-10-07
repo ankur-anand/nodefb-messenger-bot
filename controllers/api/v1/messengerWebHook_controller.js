@@ -13,19 +13,20 @@ module.exports = {
   postWebHook(req, res) {
     const data = req.body;
     // Making sure this is page subscription
-    // if (data.object === 'page') {
-    //   data.entry.forEach(entry => {
-    //     // iterate over each messaging event
-    //     entry.messaging.forEach(messEvent => {
-    //       const sender = messEvent.sender.id;
-    //       if (messEvent.message && messEvent.message.text) {
-    //         const text = messEvent.message.text;
-    //         sendTextMessage(sender, `roger that! ${text} from messenger bot`);
-    //       }
-    //     });
-    //   });
-    // }
-    res.status(200);
+    if (data.object === 'page') {
+      // different object structures for messages recieved so make sure to
+      // follow the structures properly otherwise it may led to infinite loop
+      // as the callmay end up respoding to ACK messages as well
+      // webhook structures
+      // https://developers.facebook.com/docs/messenger-platform/webhook#setup
+      let entryMessage = data.entry[0].messaging[0];
+      let sender = entryMessage.sender.id;
+      if (entryMessage.message) {
+        let text = entryMessage.message.text;
+        sendTextMessage(sender, `roger that ${text}`);
+      }
+    }
+    res.sendStatus(200);
   }
 };
 
