@@ -1,5 +1,6 @@
 const keys = require('../../../keys/key');
 const request = require('request');
+const apiaiApp = require('apiai')(keys.APIAPI_CLIENT_ACCESS_TOKEN);
 
 module.exports = {
   getWebhook(req, res) {
@@ -25,18 +26,37 @@ module.exports = {
       // handling the case when user suscribe for such event for their app
       if (entryMessage.message && !entryMessage.message.is_echo) {
         let text = entryMessage.message.text;
-        sendTextMessage(sender, `roger that ${text}`);
+        apiaiRequest(sender, text);
       }
     }
     res.sendStatus(200);
   }
 };
 
+function apiaiRequest(sender, text) {
+  let request = apiaiApp.textRequest(text, {
+    sessionId: keys.APIAPI_SESSION_ID
+  });
+
+  request.on('response', response => {
+    let aiText = response.result.fulfillment.speech;
+    if (response.result.action !== 'input.unknown') {
+      sendTextMessage(sender, aiText);
+    }
+  });
+
+  request.on('error', function(error) {
+    console.log(error);
+  });
+
+  request.end();
+}
+
 function sendTextMessage(sender, text) {
   let messageData = { text: text };
   request(
     {
-      url: 'https://graph.facebook.com/v2.6/me/messages',
+      url: 'https://graph.facebook.com/v2.10/me/messages',
       qs: { access_token: keys.PAGE_ACCESS_TOKEN },
       method: 'POST',
       json: {
